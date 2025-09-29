@@ -1,6 +1,6 @@
 'use strict'; // eslint-disable-line
 
-import { autoUpdater } from 'electron-updater';
+// import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, ipcMain, session } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import { platform } from 'os';
@@ -20,7 +20,8 @@ import { GenerateHat } from './avatarGenerator';
 const args = require('minimist')(process.argv); // eslint-disable-line
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const devTools = (isDevelopment || args.dev === 1) && true;
-const appVersion: string = isDevelopment? "DEV" : autoUpdater.currentVersion.version;
+// const appVersion: string = isDevelopment? "DEV" : autoUpdater.currentVersion.version;
+const appVersion: string = "v3.1.4-x";
 
 declare global {
 	namespace NodeJS {
@@ -49,15 +50,17 @@ if(platform() === 'linux'){
 
 function createMainWindow() {
 	const mainWindowState = windowStateKeeper({});
+	const { screen } = require('electron');
+	const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
 
 	const window = new BrowserWindow({
-		title: 'BetterCrewLink-沫夏悠轩',
-		width: 250,
-		height: 350,
-		maxWidth: 250,
-		minWidth: 250,
-		maxHeight: 350,
-		minHeight: 350,
+		title: '沫夏悠轩の聚会',
+		width: Math.round(250 * scaleFactor),
+		height: Math.round(350 * scaleFactor),
+		maxWidth: Math.round(250 * scaleFactor),
+		minWidth: Math.round(250 * scaleFactor),
+		maxHeight: Math.round(350 * scaleFactor),
+		minHeight: Math.round(350 * scaleFactor),
 		x: mainWindowState.x,
 		y: mainWindowState.y,
 		resizable: false,
@@ -123,12 +126,14 @@ function createMainWindow() {
 }
 
 function createLobbyBrowser() {
+	const { screen } = require('electron');
+	const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
 	const window = new BrowserWindow({
-		title: 'BetterCrewLink-沫夏悠轩 Browser',
-		width: 900,
-		height: 500,
-		minWidth: 250,
-		minHeight: 350,
+		title: 'BetterCrewLink Browser',
+		width: Math.round(900 * scaleFactor),
+		height: Math.round(500 * scaleFactor),
+		minWidth: Math.round(250 * scaleFactor),
+		minHeight: Math.round(350 * scaleFactor),
 		resizable: true,
 		frame: false,
 		fullscreenable: false,
@@ -171,7 +176,7 @@ function createLobbyBrowser() {
 
 function createOverlay() {
 	const overlay = new BrowserWindow({
-		title: 'BetterCrewLink-沫夏悠轩 Overlay',
+		title: 'BetterCrewLink Overlay',
 		width: 400,
 		height: 300,
 		webPreferences: {
@@ -217,7 +222,7 @@ function createOverlay() {
 	overlay.setBackgroundColor('#00000000');
 	return overlay;
 }
-
+/*
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
 	app.quit();
@@ -231,7 +236,7 @@ if (!gotTheLock) {
 				info: info,
 			});
 		} catch (e) {
-			/* Empty block */
+			// Empty block 
 		}
 	});
 	autoUpdater.on('error', (err: string) => {
@@ -241,7 +246,7 @@ if (!gotTheLock) {
 				error: err,
 			});
 		} catch (e) {
-			/*empty*/
+			// empty
 		}
 	});
 	autoUpdater.on('download-progress', (progress: ProgressInfo) => {
@@ -251,7 +256,7 @@ if (!gotTheLock) {
 				progress,
 			});
 		} catch (e) {
-			/*empty*/
+			// empty
 		}
 	});
 	autoUpdater.on('update-downloaded', () => {
@@ -270,7 +275,7 @@ if (!gotTheLock) {
 			mainWindow?.destroy();
 			overlay?.destroy();
 		} catch {
-			/* empty */
+			// empty
 		}
 		app.quit();
 	});
@@ -377,4 +382,4 @@ if (!gotTheLock) {
 	});
 
 
-}
+}*/

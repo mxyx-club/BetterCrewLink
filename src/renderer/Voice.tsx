@@ -1150,7 +1150,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 		},
 		(error) => {
 			console.error(error);
-			setError("不能连接到你的麦克风:\n" + error);
+			setError("无法连接到麦克风:\n" + error);
 		});
 
 		return () => {

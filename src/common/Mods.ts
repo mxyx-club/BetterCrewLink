@@ -1,5 +1,6 @@
 export type ModsType =
 	| 'NONE'
+	| 'TOWN_OF_US_MIRA'
 	| 'TOWN_OF_US'
 	| 'THE_OTHER_ROLES'
 	| 'LAS_MONJAS'
@@ -18,6 +19,11 @@ export const modList: AmongusMod[] = [
 		label: 'None',
 	},
 	{
+		id: 'TOWN_OF_US_MIRA',
+		label: 'Town of Us: Mira',
+		dllStartsWith: 'TownOfUsMira',
+	},
+	{
 		id: 'TOWN_OF_US',
 		label: 'Town of Us: Reactivated',
 		dllStartsWith: 'TownOfUs',
@@ -27,11 +33,6 @@ export const modList: AmongusMod[] = [
 		label: 'The Other Roles',
 		dllStartsWith: 'TheOtherRoles',
 	},
-	// {
-	// 	id: 'TOWN_OF_HOSTS',
-	// 	label: 'Town of Hosts',
-	// 	dllStartsWith: 'TownOfHost',
-	// },
 	{
 		id: 'LAS_MONJAS',
 		label: 'Las Monjas',
@@ -41,4 +42,9 @@ export const modList: AmongusMod[] = [
 		id: 'OTHER',
 		label: 'Other',
 	},
+	// {
+	// 	id: 'TOWN_OF_HOSTS',
+	// 	label: 'Town of Hosts',
+	// 	dllStartsWith: 'TownOfHost',
+	// },
 ];

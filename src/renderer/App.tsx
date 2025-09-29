@@ -235,12 +235,12 @@ export default function App({ t }): JSX.Element {
 								<Settings t={t} open={settingsOpen} onClose={() => setSettingsOpen(false)} />
 								<Dialog fullWidth open={updaterState.state !== 'unavailable' && diaOpen}>
 									{updaterState.state === 'available' && updaterState.info && (
-										<DialogTitle>Update v{updaterState.info.version}</DialogTitle>
+										<DialogTitle>新版本 v{updaterState.info.version}</DialogTitle>
 									)}
 									{updaterState.state === 'error' && (
-										<DialogTitle>Updater Error</DialogTitle>
+										<DialogTitle>更新错误</DialogTitle>
 									)}
-									{updaterState.state === 'downloading' && <DialogTitle>Updating...</DialogTitle>}
+									{updaterState.state === 'downloading' && <DialogTitle>正在更新...</DialogTitle>}
 									<DialogContent>
 										{updaterState.state === 'downloading' && updaterState.progress && (
 											<>
@@ -253,7 +253,7 @@ export default function App({ t }): JSX.Element {
 										{updaterState.state === 'available' && (
 											<>
 												<LinearProgress variant={'indeterminate'} />
-												<DialogContentText>Update now or later?</DialogContentText>
+												<DialogContentText>要立即更新BCL吗?</DialogContentText>
 											</>
 										)}
 										{updaterState.state === 'error' && (
@@ -268,7 +268,7 @@ export default function App({ t }): JSX.Element {
 													shell.openExternal("https://github.com/OhMyGuus/BetterCrewLink/releases/latest");
 												}}
 											>
-												Download Manually
+												手动下载
 											</Button>
 											<Button
 												color="grey"
@@ -276,7 +276,7 @@ export default function App({ t }): JSX.Element {
 													setDiaOpen(false);
 												}}
 											>
-												Skip
+												跳过
 											</Button>
 										</DialogActions>
 									)}
@@ -287,14 +287,14 @@ export default function App({ t }): JSX.Element {
 													ipcRenderer.send('update-app');
 												}}
 											>
-												Now
+												更新
 											</Button>
 											<Button
 												onClick={() => {
 													setDiaOpen(false);
 												}}
 											>
-												Later
+												取消
 											</Button>
 										</DialogActions>
 									)}

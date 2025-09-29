@@ -14,24 +14,28 @@ jobs:
       matrix:
         include:
          - os: windows-latest
-           installer: 'dist/Better-CrewLink Setup*.exe'
+           build_command: 'dist:all'
+           installer_pattern: 'dist/Better-CrewLink Setup*.exe'
+           artifact_name: 'BetterCrewLink Windows'
          - os: ubuntu-latest
-           dist: 'dist:linux'
-           installer: 'dist/Better-CrewLink-*.AppImage'
+           build_command: 'dist:linux'
+           installer_pattern: 'dist/Better-CrewLink-*.AppImage'
+           artifact_name: 'BetterCrewLink Linux'
 
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
-      - name: Install Node.js, NPM and Yarn
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16.14.2
+          cache: 'yarn'
 
       - name: Cache Node Modules
         id: node-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             node_modules
@@ -40,60 +44,21 @@ jobs:
 
 
       - name: Install Dependencies
-        if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install  --cache-folder .yarn --network-timeout 100000
+        run: yarn install --frozen-lockfile --network-timeout 100000
 
-      - name: Build App liunx
-        if: ${{ matrix.os == 'ubuntu-latest'}}
-        run: yarn run ${{ matrix.dist }} --publish never
+      - name: Build Application
+        run: yarn run ${{ matrix.build_command }} --publish never
 
-      - name: Upload Installer liunx
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'ubuntu-latest'}}
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
         with:
-          name: BetterCrewLink Installer ${{ runner.os }}
-          path: ${{ matrix.installer }}
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.installer_pattern }}
           if-no-files-found: error
 
-      - name: Build App x32
-        if: ${{ matrix.os == 'windows-latest'}}
-        run: yarn run dist:32 --publish never
-
-      - name: Upload Installer x32
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'windows-latest'}}
+      - name: Upload Unpacked (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
         with:
-          name: BetterCrewLink Installer ${{ runner.os }} x32
-          path: ${{ matrix.installer }}
-          if-no-files-found: error
-
-      - name: Build App x64
-        if: ${{ matrix.os == 'windows-latest'}}
-        run: yarn run dist:64 --publish never
-
-      - name: Upload Installer x64
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'windows-latest'}}
-        with:
-          name: BetterCrewLink Installer ${{ runner.os }} x64
-          path: ${{ matrix.installer }}
-          if-no-files-found: error
-
-      - name: Build App x32 + x64
-        if: ${{ matrix.os == 'windows-latest'}}
-        run: yarn run dist:all --publish never
-
-      - name: Upload Installer x32 + x64
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'windows-latest'}}
-        with:
-          name: BetterCrewLink Installer ${{ runner.os }} x32 + x64
-          path: ${{ matrix.installer }}
-          if-no-files-found: error
-
-      - name: Upload Unpacked
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'windows-latest'}}
-        with:
-          name: BetterCrewLink Unpacked 64bit 
-          path: 'dist/win-unpacked'
+          name: BetterCrewLink Unpacked Windows
+          path: dist/win-unpacked
