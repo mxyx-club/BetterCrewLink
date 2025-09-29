@@ -1,6 +1,6 @@
 'use strict'; // eslint-disable-line
 
-// import { autoUpdater } from 'electron-updater';
+import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, ipcMain, session } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import { platform } from 'os';
@@ -21,7 +21,7 @@ const args = require('minimist')(process.argv); // eslint-disable-line
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const devTools = (isDevelopment || args.dev === 1) && true;
 // const appVersion: string = isDevelopment? "DEV" : autoUpdater.currentVersion.version;
-const appVersion: string = "v3.1.4-x";
+const appVersion: string = "3.1.4-x";
 
 declare global {
 	namespace NodeJS {
@@ -222,12 +222,12 @@ function createOverlay() {
 	overlay.setBackgroundColor('#00000000');
 	return overlay;
 }
-/*
+
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
 	app.quit();
 } else {
-	autoUpdater.autoDownload = false;
+	/*autoUpdater.autoDownload = false;
 	autoUpdater.checkForUpdates();
 	autoUpdater.on('update-available', (info: UpdateInfo) => {
 		try {
@@ -261,7 +261,7 @@ if (!gotTheLock) {
 	});
 	autoUpdater.on('update-downloaded', () => {
 		autoUpdater.quitAndInstall();
-	});
+	});*/
 
 	// quit application when all windows are closed
 	app.on('window-all-closed', () => {
@@ -380,6 +380,4 @@ if (!gotTheLock) {
 			global.mainWindow.setAlwaysOnTop(enable, 'screen-saver');
 		}
 	});
-
-
-}*/
+}

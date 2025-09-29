@@ -267,7 +267,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 
 	const [deafenedState, setDeafened] = useState(false);
 	const [mutedState, setMuted] = useState(false);
-	const [muteOtherDeadPlayers, setDead] = useState(true);
+	const [muteOtherDeadPlayers, setDead] = useState(false);
 	const [connected, setConnected] = useState(false);
 
 	function applyEffect(gain: AudioNode, effectNode: AudioNode, destination: AudioNode, player: Player) {
@@ -731,7 +731,7 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 		deafened: false,
 		muted: false,
 		impostorRadio: null,
-		muteOtherDeadPlayers: true,
+		muteOtherDeadPlayers: false,
 		toggleMute: () => {
 			/*empty*/
 		},

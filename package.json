@@ -1,11 +1,11 @@
 {
 	"name": "bettercrewlink",
-	"version": "3.1.4-x",
+	"version": "3.1.4",
 	"license": "GPL-3.0-or-later",
 	"description": "Free, open, Among Us Proximity Voice Chat",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/OhMyGuus/BetterCrewLink.git"
+		"url": "https://github.com/mxyx-club/BetterCrewLink.git"
 	},
 	"funding": {
 		"type": "individual",
@@ -21,7 +21,7 @@
 		"lint": "eslint src",
 		"dev": "electron-webpack dev",
 		"compile": "electron-webpack",
-		"dist:all": "yarn compile && electron-builder --win --x64 --ia32",
+		"dist": "yarn compile && electron-builder --win --x64 --ia32",
 		"dist:32": "yarn compile && electron-builder --win --ia32",
 		"dist:64": "yarn compile && electron-builder --win --x64",
 		"dist:linux": "yarn compile && electron-builder --linux --x64",
