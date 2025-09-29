@@ -9,56 +9,88 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-
+    
     strategy:
+      fail-fast: false
       matrix:
         include:
-         - os: windows-latest
-           build_command: 'dist:all'
-           installer_pattern: 'dist/Better-CrewLink Setup*.exe'
-           artifact_name: 'BetterCrewLink Windows'
-         - os: ubuntu-latest
-           build_command: 'dist:linux'
-           installer_pattern: 'dist/Better-CrewLink-*.AppImage'
-           artifact_name: 'BetterCrewLink Linux'
-
+          # Windows builds
+          - os: windows-latest
+            target: windows-all
+            arch: ia32,x64
+            dist: 'dist'
+            installer_pattern: 'dist/Better-CrewLink Setup*.exe'
+            unpacked_path: ''
+          - os: windows-latest
+            target: windows-x64
+            arch: x64
+            dist: 'dist'
+            installer_pattern: 'dist/Better-CrewLink Setup*.exe'
+            unpacked_path: ''
+          - os: windows-latest
+            target: windows-x64-unpacked
+            arch: x64
+            dist: 'dist'
+            installer_pattern: ''
+            unpacked_path: 'dist/win-unpacked'
+          
+          # Linux builds
+          - os: ubuntu-latest
+            target: linux-all
+            arch: ia32,x64
+            dist: 'dist:linux'
+            installer_pattern: 'dist/Better-CrewLink-*.AppImage'
+            unpacked_path: ''
+          - os: ubuntu-latest
+            target: linux-x64
+            arch: x64
+            dist: 'dist:linux'
+            installer_pattern: 'dist/Better-CrewLink-*.AppImage'
+            unpacked_path: ''
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v3
+      - name: Install Linux dependencies
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxcb1-dev libx11-dev
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v4
         with:
           node-version: 16.14.2
-          cache: 'yarn'
-
+        
       - name: Cache Node Modules
         id: node-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             node_modules
             .yarn
-          key: ${{ runner.os }}-3-${{ hashFiles('yarn.lock')}}
-
-
+          key: ${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('yarn.lock')}}
+    
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile --network-timeout 100000
-
-      - name: Build Application
-        run: yarn run ${{ matrix.build_command }} --publish never
-
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: yarn install --cache-folder .yarn --network-timeout 100000
+        
+      - name: Build App
+        run: yarn run ${{ matrix.dist }} --publish never --${{ matrix.arch }}
+     
       - name: Upload Installer
+        if: ${{ matrix.installer_pattern != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
+          name: BetterCrewLink ${{ matrix.target }}
           path: ${{ matrix.installer_pattern }}
           if-no-files-found: error
-
-      - name: Upload Unpacked (Windows)
-        if: matrix.os == 'windows-latest'
+          
+      - name: Upload Unpacked
+        if: ${{ matrix.unpacked_path != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: BetterCrewLink Unpacked Windows
-          path: dist/win-unpacked
+          name: BetterCrewLink ${{ matrix.target }}
+          path: ${{ matrix.unpacked_path }}
+          if-no-files-found: error
