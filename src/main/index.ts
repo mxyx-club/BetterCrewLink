@@ -50,17 +50,17 @@ if(platform() === 'linux'){
 
 function createMainWindow() {
 	const mainWindowState = windowStateKeeper({});
-	const { screen } = require('electron');
-	const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
+	// const { screen } = require('electron');
+	// const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
 
 	const window = new BrowserWindow({
 		title: '沫夏悠轩の聚会',
-		width: Math.round(250 * scaleFactor),
-		height: Math.round(350 * scaleFactor),
-		maxWidth: Math.round(250 * scaleFactor),
-		minWidth: Math.round(250 * scaleFactor),
-		maxHeight: Math.round(350 * scaleFactor),
-		minHeight: Math.round(350 * scaleFactor),
+		width: 250,
+		height: 350,
+		maxWidth: 250,
+		minWidth: 250,
+		maxHeight: 350,
+		minHeight: 350,
 		x: mainWindowState.x,
 		y: mainWindowState.y,
 		resizable: false,
@@ -127,13 +127,13 @@ function createMainWindow() {
 
 function createLobbyBrowser() {
 	const { screen } = require('electron');
-	const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
+	// const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
 	const window = new BrowserWindow({
 		title: 'BetterCrewLink Browser',
-		width: Math.round(900 * scaleFactor),
-		height: Math.round(500 * scaleFactor),
-		minWidth: Math.round(250 * scaleFactor),
-		minHeight: Math.round(350 * scaleFactor),
+		width: 900,
+		height: 500,
+		minWidth: 250,
+		minHeight: 350,
 		resizable: true,
 		frame: false,
 		fullscreenable: false,

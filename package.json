@@ -24,9 +24,10 @@
 		"dist": "yarn compile && electron-builder --win --x64 --ia32",
 		"dist:32": "yarn compile && electron-builder --win --ia32",
 		"dist:64": "yarn compile && electron-builder --win --x64",
+		"dist:unpacked": "yarn compile && electron-builder --win --x64 --dir",
 		"dist:linux": "yarn compile && electron-builder --linux --x64",
-		"publish": "yarn compile && electron-builder --win --x64 --ia32 --publish always ",
-		"publish:linux": "yarn compile && electron-builder --x64 --linux --publish always"
+		"publish": "yarn compile && electron-builder --win --x64 --ia32 --publish always",
+		"publish:linux": "yarn compile && electron-builder --linux --x64 --publish always"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.9.3",

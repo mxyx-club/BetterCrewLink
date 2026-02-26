@@ -140,6 +140,10 @@ export const SettingsStore = new Store<ISettings>({
 			type: 'string',
 			default: 'F',
 		},
+		muteOtherDeadPlayers: {
+			type: 'string',
+			default: 'M',
+		},
 		muteShortcut: {
 			type: 'string',
 			default: 'RAlt',

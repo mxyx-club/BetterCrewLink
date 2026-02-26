@@ -13,6 +13,7 @@ export interface ISettings {
 	deafenShortcut: string;
 	muteShortcut: string;
 	impostorRadioShortcut: string;
+	muteOtherDeadPlayers: string;
 	hideCode: boolean;
 	natFix: boolean;
 	compactOverlay: boolean;

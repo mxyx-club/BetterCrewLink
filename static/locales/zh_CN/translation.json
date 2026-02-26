@@ -62,7 +62,8 @@
 			"push_to_talk": "按键说话",
 			"mute": "闭麦",
 			"deafen": "静音",
-			"impostor_radio": "内鬼私密通话"
+			"impostor_radio": "内鬼私密通话",
+			"mute_dead_players": "静音已死亡玩家"
 		},
 		"overlay": {
 			"title": "游戏内覆盖",

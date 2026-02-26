@@ -865,6 +865,22 @@ const Settings: React.FC<SettingsProps> = function ({ t, open, onClose }: Settin
 							}}
 						/>
 					</Grid>
+					<Grid item xs={6}>
+						<TextField
+							spellCheck={false}
+							color="secondary"
+							label={t('settings.keyboard.mute_dead_players')}
+							value={settings.muteOtherDeadPlayers}
+							className={classes.shortcutField}
+							variant="outlined"
+							onKeyDown={(ev) => {
+								setShortcut(ev, 'muteOtherDeadPlayers');
+							}}
+							onMouseDown={(ev) => {
+								setMouseShortcut(ev, 'muteOtherDeadPlayers');
+							}}
+						/>
+					</Grid>
 				</Grid>
 
 				<Divider />
