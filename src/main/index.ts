@@ -29,7 +29,6 @@ declare global {
 		interface Global {
 			mainWindow: BrowserWindow | null;
 			overlay: BrowserWindow | null;
-			lobbyBrowser: BrowserWindow | null;
 		}
 	}
 }
@@ -121,55 +120,6 @@ function createMainWindow() {
 			window.focus();
 		});
 	});
-	console.log('Opened app version: ', appVersion);
-	return window;
-}
-
-function createLobbyBrowser() {
-	const { screen } = require('electron');
-	// const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
-	const window = new BrowserWindow({
-		title: 'BetterCrewLink Browser',
-		width: 900,
-		height: 500,
-		minWidth: 250,
-		minHeight: 350,
-		resizable: true,
-		frame: false,
-		fullscreenable: false,
-		closable: true,
-		maximizable: false,
-		webPreferences: {
-			nodeIntegration: true,
-			contextIsolation: false,
-		},
-	});
-
-	window.on('closed', () => {
-		global.lobbyBrowser = null;
-	});
-	// if (devTools) {
-	// 	// Force devtools into detached mode otherwise they are unusable
-	// 	window.webContents.openDevTools({
-	// 		mode: 'detach',
-	// 	});
-	// }
-	if (isDevelopment) {
-		window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=DEV&view=lobbies`);
-	} else {
-		window.loadURL(
-			formatUrl({
-				pathname: joinPath(__dirname, 'index.html'),
-				protocol: 'file',
-				query: {
-					version: appVersion,
-					view: 'lobbies',
-				},
-				slashes: true,
-			})
-		);
-	}
-	window.webContents.userAgent = `BetterCrewLink/${appVersion} (win32)`;
 	console.log('Opened app version: ', appVersion);
 	return window;
 }
@@ -335,15 +285,6 @@ if (!gotTheLock) {
 
 	ipcMain.on('update-app', () => {
 		autoUpdater.downloadUpdate();
-	});
-
-	ipcMain.on(IpcHandlerMessages.OPEN_LOBBYBROWSER, () => {
-		if (!global.lobbyBrowser) {
-			global.lobbyBrowser = createLobbyBrowser();
-		} else {
-			global.lobbyBrowser.show();
-			global.lobbyBrowser.moveTop();
-		}
 	});
 
 	ipcMain.on('enableOverlay', async (_event, enable) => {

@@ -143,20 +143,6 @@ ipcMain.handle(IpcHandlerMessages.START_HOOK, async (event) => {
 	}
 });
 
-ipcMain.on('reload', async (_, lobbybrowser) => {
-	if (!lobbybrowser) {
-		global.mainWindow?.reload();
-	}
-	global.lobbyBrowser?.reload();
-});
-
-ipcMain.on('minimize', async (_, lobbybrowser) => {
-	if (!lobbybrowser) {
-		global.mainWindow?.minimize();
-	}
-	global.lobbyBrowser?.minimize();
-});
-
 ipcMain.handle("getlocale", () => {
 	return app.getLocale();
 });

@@ -32,7 +32,6 @@ export enum IpcHandlerMessages {
 	RESET_KEYHOOKS = 'RESET_KEYHOOKS',
 	JOIN_LOBBY = 'JOIN_LOBBY',
 	JOIN_LOBBY_ERROR = 'JOIN_LOBBY_ERROR',
-	OPEN_LOBBYBROWSER = 'OPEN_LOBBYBROWSER',
 }
 
 // Main --> Renderer (send/on)

@@ -1428,21 +1428,6 @@ const Voice: React.FC<VoiceProps> = function ({ t, error: initialError }: VoiceP
 						<small style={{ padding: 0 }}>{t('settings.lobbysettings.meetings_only_warning2')}</small>
 					</div>
 				)}
-				{gameState.lobbyCode && <Divider />}
-				{displayedLobbyCode === 'MENU' && (
-					<div className={classes.top}>
-						<Button
-							style={{ margin: '10px' }}
-							onClick={() => {
-								ipcRenderer.send(IpcHandlerMessages.OPEN_LOBBYBROWSER);
-							}}
-							color="primary"
-							variant="outlined"
-						>
-							{t('buttons.public_lobby')}
-						</Button>
-					</div>
-				)}
 				{myPlayer && gameState.lobbyCode !== 'MENU' && (
 					<Grid
 						container

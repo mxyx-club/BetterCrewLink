@@ -30,7 +30,7 @@ const RawFooter: React.FC = function () {
 				<Button 
 					color="grey"
 					onClick={() => {
-						shell.openExternal('https://github.com/OhMyGuus/BetterCrewLink');
+						shell.openExternal('https://github.com/mxyx-club/BetterCrewLink');
 					}}
 				>
 					<Tooltip title="Our GitHub page!" arrow>
