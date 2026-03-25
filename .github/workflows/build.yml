@@ -9,60 +9,116 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-
+    
     strategy:
+      fail-fast: false
       matrix:
         include:
-         - os: windows-latest
-           dist: 'dist'
-           installer: 'dist/Better-CrewLink Setup*.exe'
-         - os: ubuntu-latest
-           dist: 'dist:linux'
-           installer: 'dist/Better-CrewLink-*.AppImage'
-
+          - name: windows-full
+            os: windows-2022
+            script: dist
+          - name: windows-x64
+            os: windows-2022
+            script: dist:64
+          - name: windows-x64-unpacked
+            os: windows-2022
+            script: dist:unpacked
+          - name: linux-x64
+            os: ubuntu-latest
+            script: dist:linux
 
     steps:
-      - name: Install Linux dependencies
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
+
+      - name: Setup Python (Windows)
+        if: ${{ matrix.os == 'windows-2022' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          architecture: 'x64'
+
+      - name: Setup MSVC 2022
+        if: ${{ matrix.os == 'windows-2022' }}
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Configure node-gyp (Windows)
+        if: ${{ matrix.os == 'windows-2022' }}
+        run: |
+          echo "PYTHON=python3.9" >> $GITHUB_ENV
+          echo "npm_config_python=python3.9" >> $GITHUB_ENV
+          echo "npm_config_msvs_version=2022" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Setup Python (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          architecture: 'x64'
+
+      - name: Setup Linux Dependencies
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxcb1-dev libx11-dev
+          sudo apt-get install -y \
+            libxcb1-dev libx11-dev libxkbfile-dev libsecret-1-dev \
+            fakeroot rpm dpkg libarchive-tools desktop-file-utils \
+            libgdk-pixbuf2.0-dev libffi-dev shared-mime-info libappimage-dev fuse
 
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16.14.2
-        
-      - name: Cache Node Modules
-        id: node-cache
-        uses: actions/cache@v4
+          node-version: '16.14.2'
+          cache: 'yarn'
+
+      - uses: actions/cache@v4
         with:
           path: |
             node_modules
-            .yarn
-          key: ${{ runner.os }}-3-${{ hashFiles('yarn.lock')}}
-    
-    
+            .yarn/cache
+          key: ${{ runner.os }}-${{ matrix.name }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.name }}-
+            ${{ runner.os }}-
+
+      - name: Clean Old Cache
+        run: rm -rf .yarn/v6/.tmp node_modules/.cache
+        continue-on-error: true
+        shell: bash
+
       - name: Install Dependencies
-        if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install  --cache-folder .yarn --network-timeout 100000
-        
+        run: yarn install --network-timeout 100000
+
       - name: Build App
-        run: yarn run ${{ matrix.dist }} --publish never
-     
-      - name: Upload Installer
+        run: yarn run ${{ matrix.script }} --publish never
+
+      - name: Upload Windows Installer
+        if: ${{ matrix.os == 'windows-2022' && matrix.name != 'windows-x64-unpacked' }}
         uses: actions/upload-artifact@v4
         with:
-          name: BetterCrewLink Installer ${{ runner.os }}
-          path: ${{ matrix.installer }}
+          name: BetterCrewLink-${{ matrix.name }}
+          path: dist/*.exe
           if-no-files-found: error
-          
-      - name: Upload Unpacked
+          retention-days: 30
+
+      - name: Upload Windows Unpacked
+        if: ${{ matrix.name == 'windows-x64-unpacked' }}
         uses: actions/upload-artifact@v4
-        if: ${{ matrix.os == 'windows-latest'}}
         with:
-          name: BetterCrewLink Unpacked 64bit 
-          path: 'dist/win-unpacked'
+          name: BetterCrewLink-${{ matrix.name }}
+          path: dist/win-unpacked
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Linux
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: BetterCrewLink-${{ matrix.name }}
+          path: dist/*.AppImage
+          if-no-files-found: error
+          retention-days: 30
